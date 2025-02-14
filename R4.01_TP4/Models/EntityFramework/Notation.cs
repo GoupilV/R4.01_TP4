@@ -8,12 +8,10 @@ namespace R4._01_TP4.Models.EntityFramework
     public partial class Notation
     {
         [Key]
-        [ForeignKey("utl_id")]
         [Column("utl_id")]
-        public int Utilisateur { get; set; }
+        public int UtilisateurId { get; set; }
 
         [Key]
-        [ForeignKey("flm_id")]
         [Column("flm_id")]
         public int FilmId { get; set; }
 
@@ -22,10 +20,12 @@ namespace R4._01_TP4.Models.EntityFramework
         [Range(0, 5)]
         public int Note { get; set; }
 
-        [InverseProperty(nameof(Film.Idfilm))]
-        public virtual ICollection<Film> FilmNote { get; set; } = new List<Film>();
+        [ForeignKey(nameof(FilmId))]
+        [InverseProperty(nameof(Film.NotesFilm))]
+        public virtual ICollection<Film> FilmNote { get; set; }
 
-        [InverseProperty(nameof(Utilisateur.UtilisateurId))]
+        [ForeignKey(nameof(UtilisateurId))]
+        [InverseProperty(nameof(Utilisateur.NotesUtilisateur))]
         public virtual ICollection<Utilisateur> UtilisateurNotant { get; set; } = new List<Utilisateur>();
     }
 }

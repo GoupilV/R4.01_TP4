@@ -30,8 +30,8 @@ namespace R4._01_TP4.Models.EntityFramework
         [StringLength(30)]
         public string Genre { get; set; }
 
-        [InverseProperty(nameof(Notation.FilmId))]
-        public virtual ICollection<Notation> NotesFilm { get; set; } = new List<Notation>();
+        [InverseProperty(nameof(Notation.FilmNote))]
+        public virtual ICollection<Notation> NotesFilm { get; set; }
 
     }
 }

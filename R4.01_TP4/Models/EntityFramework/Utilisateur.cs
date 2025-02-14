@@ -44,8 +44,24 @@ namespace R4._01_TP4.Models.EntityFramework
         [StringLength(50)]
         public string? Ville { get; set; }
 
-        [Column("utl_rue")]
-        [StringLength(200)]
-        public string? Rue { get; set; }
+        [Column("utl_pays")]
+        [StringLength(50)]
+        public string? Pays { get; set; }
+
+        [Column("utl_latitude")]
+        public float? Latitude { get; set; }
+
+        [Column("utl_longitude")]
+        public float? Longitude { get; set; }
+
+        [Column("utl_datecreation")]
+        public DateTime DateCreation { get; set; }
+
+        public virtual ICollection<Notation> NotesUtilisateur { get; set; }
+
+        public Utilisateur()
+        {
+            NotesUtilisateur = new HashSet<Notation>();
+        }
     }
 }
