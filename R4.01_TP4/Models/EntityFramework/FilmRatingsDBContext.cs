@@ -40,7 +40,7 @@ public partial class FilmsRatingDBContext : DbContext
 
         modelBuilder.Entity<Notation>(entity =>
         {
-            entity.HasKey(e => new { e.FilmId, e.Utilisateur }).HasName("pk_notation");
+            entity.HasKey(e => new { e.FilmId, e.UtilisateurId }).HasName("pk_notation");
 
             entity.HasOne(d => d.FilmNote).WithMany()
                 .OnDelete(DeleteBehavior.Restrict)
@@ -55,7 +55,12 @@ public partial class FilmsRatingDBContext : DbContext
         {
             entity.HasKey(e => e.Idfilm).HasName("pk_film");
 
-            entity.HasOne(d => d.NotesFilm).WithMany()
+            entity.Property(e => e.DateSortie)
+                 .HasColumnType("date");
+
+            entity.HasMany(d => d.NotesFilm)
+                .WithOne(p => p.FilmNote)
+                .HasForeignKey(d => d.FilmId )
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_film_notation");
         });
@@ -64,7 +69,21 @@ public partial class FilmsRatingDBContext : DbContext
         {
             entity.HasKey(e => e.UtilisateurId).HasName("pk_utilisateur");
 
-            entity.HasOne(d => d.NotesUtilisateur).WithMany()
+            entity.Property(e => e.CodePostal)
+                .HasColumnType("char");
+
+            entity.Property(e => e.Pays)
+                .HasDefaultValue("France");
+
+            entity.Property(e => e.DateCreation)
+                .HasColumnType("date");
+
+            entity.HasIndex(e => e.Mail)
+                .IsUnique();
+
+            entity.HasMany(d => d.NotesUtilisateur)
+                .WithOne(p => p.UtilisateurNote)
+                .HasForeignKey(d => d.UtilisateurId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_utilisateur_notation");
         });

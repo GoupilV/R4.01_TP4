@@ -22,10 +22,10 @@ namespace R4._01_TP4.Models.EntityFramework
 
         [ForeignKey(nameof(FilmId))]
         [InverseProperty(nameof(Film.NotesFilm))]
-        public virtual ICollection<Film> FilmNote { get; set; }
+        public virtual Film FilmNote { get; set; } = null!;
 
         [ForeignKey(nameof(UtilisateurId))]
         [InverseProperty(nameof(Utilisateur.NotesUtilisateur))]
-        public virtual ICollection<Utilisateur> UtilisateurNotant { get; set; } = new List<Utilisateur>();
+        public virtual Utilisateur UtilisateurNote { get; set; } = null!;
     }
 }

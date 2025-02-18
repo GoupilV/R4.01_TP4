@@ -12,19 +12,21 @@ namespace R4._01_TP4.Models.EntityFramework
 
         [Column("utl_nom")]
         [StringLength(50)]
-        public string? Nom {  get; set; }
+        public string? Nom { get; set; }
 
         [Column("utl_prenom")]
         [StringLength(50)]
         public string? Prenom { get; set; }
 
         [Column("utl_mobile", TypeName = "char(10)")]
+        [RegularExpression(@"^0[0-9]{9}$", ErrorMessage = "Numero non valide")]
         public string? Mobile { get; set; }
 
         [Column("utl_mail")]
-        [StringLength(100)]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "La longueur d’un email doit être comprise entre 6 et 100 caractères.")]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [EmailAddress]
         public string Mail { get; set; }
 
         [Column("utl_pwd")]
@@ -55,7 +57,7 @@ namespace R4._01_TP4.Models.EntityFramework
         public float? Longitude { get; set; }
 
         [Column("utl_datecreation")]
-        public DateTime DateCreation { get; set; }
+        public DateTime? DateCreation { get; set; }
 
         public virtual ICollection<Notation> NotesUtilisateur { get; set; }
 

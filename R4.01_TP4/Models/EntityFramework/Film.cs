@@ -20,18 +20,18 @@ namespace R4._01_TP4.Models.EntityFramework
         public string? Resume { get; set; }
 
         [Column("flm_datesortie")]
-        public DateTime DateSortie { get; set; }
+        public DateTime? DateSortie { get; set; }
 
         [Column("flm_duree")]
         [Precision(3,0)]
-        public decimal Duree {  get; set; }
+        public decimal? Duree {  get; set; }
 
         [Column("flm_genre")]
         [StringLength(30)]
-        public string Genre { get; set; }
+        public string? Genre { get; set; }
 
         [InverseProperty(nameof(Notation.FilmNote))]
-        public virtual ICollection<Notation> NotesFilm { get; set; }
+        public virtual ICollection<Notation> NotesFilm { get; set; } = new List<Notation>();
 
     }
 }
