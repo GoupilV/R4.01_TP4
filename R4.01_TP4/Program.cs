@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
+using R4._01_TP4.Models.DataManager;
 using R4._01_TP4.Models.EntityFramework;
+using R4._01_TP4.Models.Repository;
 
 namespace R4._01_TP4
 {
@@ -20,6 +22,9 @@ namespace R4._01_TP4
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Config repository dependancy injection 
+            builder.Services.AddScoped<IDataRepository<Utilisateur>, UtilisateurManager>();
 
             var app = builder.Build();
 
