@@ -32,14 +32,15 @@ namespace R4._01_TP4.Controllers
         [ActionName("GetUtilisateurById")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            //var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            var utilisateur = dataRepository.GetByIdAsync(id);
 
-            if (utilisateur == null)
+            if (utilisateur.Result == null)
             {
                 return NotFound();
             }
 
-            return utilisateur;
+            return utilisateur.Result;
         }
 
         // PUT: api/Utilisateurs/5
@@ -52,25 +53,36 @@ namespace R4._01_TP4.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(utilisateur).State = EntityState.Modified;
+            //_context.Entry(utilisateur).State = EntityState.Modified;
+            var userToUpdate = dataRepository.GetById(id);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UtilisateurExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!UtilisateurExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
-            return NoContent();
+            //return NoContent();
+
+            if(userToUpdate == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                dataRepository.UpdateAsync(userToUpdate.Value, utilisateur);
+                return NoContent();
+            }
         }
 
         // POST: api/Utilisateurs
@@ -88,14 +100,16 @@ namespace R4._01_TP4.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            //var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            var utilisateur = dataRepository.GetById(id);
             if (utilisateur == null)
             {
                 return NotFound();
             }
 
-            _context.Utilisateurs.Remove(utilisateur);
-            await _context.SaveChangesAsync();
+            //_context.Utilisateurs.Remove(utilisateur);
+            //await _context.SaveChangesAsync();
+            await dataRepository.DeleteAsync(utilisateur.Value);
 
             return NoContent();
         }
