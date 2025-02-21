@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using R4._01_TP4.Models.DataManager;
 using R4._01_TP4.Models.EntityFramework;
+using R4._01_TP4.Models.Repository;
 
 namespace R4._01_TP4.Controllers
 {
@@ -13,18 +15,20 @@ namespace R4._01_TP4.Controllers
     [ApiController]
     public class UtilisateursController : ControllerBase
     {
-        private readonly FilmsRatingDBContext _context;
+        //private readonly FilmsRatingDBContext _context;
+        //private readonly UtilisateurManager utilisateurManager;
+        private readonly IDataRepository<Utilisateur> dataRepository;
 
-        public UtilisateursController(FilmsRatingDBContext context)
+        public UtilisateursController(IDataRepository<Utilisateur> dataRepo)
         {
-            _context = context;
+            dataRepository = dataRepo;
         }
 
         // GET: api/Utilisateurs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
-            return await _context.Utilisateurs.ToListAsync();
+            return dataRepository.GetAll();
         }
 
         // GET: api/Utilisateurs/5
@@ -33,7 +37,7 @@ namespace R4._01_TP4.Controllers
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
-            var utilisateur = dataRepository.GetByIdAsync(id);
+            var utilisateur = dataRepository.GetById(id);
 
             if (utilisateur.Result == null)
             {
@@ -90,8 +94,14 @@ namespace R4._01_TP4.Controllers
         [HttpPost]
         public async Task<ActionResult<Utilisateur>> PostUtilisateur(Utilisateur utilisateur)
         {
-            _context.Utilisateurs.Add(utilisateur);
-            await _context.SaveChangesAsync();
+            //_context.Utilisateurs.Add(utilisateur);
+            //await _context.SaveChangesAsync();
+
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await dataRepository.AddAsync(utilisateur);
 
             return CreatedAtAction("GetUtilisateur", new { id = utilisateur.UtilisateurId }, utilisateur);
         }
@@ -114,17 +124,18 @@ namespace R4._01_TP4.Controllers
             return NoContent();
         }
 
-        private bool UtilisateurExists(int id)
-        {
-            return _context.Utilisateurs.Any(e => e.UtilisateurId == id);
-        }
+        //private bool UtilisateurExists(int id)
+        //{
+        //    return _context.Utilisateurs.Any(e => e.UtilisateurId == id);
+        //}
 
         // GET: api/Utilisateurs/toto@gmail.com
         [HttpGet("{email}")]
         [ActionName("GetUtilisateurByEmail")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurByEmail(string email)
         {
-            var utilisateur = _context.Utilisateurs.Where(p => p.Mail == email.ToLower()).FirstOrDefault();
+            //var utilisateur = _context.Utilisateurs.Where(p => p.Mail == email.ToLower()).FirstOrDefault();
+            var utilisateur = await dataRepository.GetByStringAsync(email);
 
             if (utilisateur == null)
             {

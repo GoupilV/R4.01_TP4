@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using R4._01_TP4.Controllers;
+using R4._01_TP4.Models.DataManager;
 using R4._01_TP4.Models.EntityFramework;
+using R4._01_TP4.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,18 +22,23 @@ namespace R4._01_TP4.Controllers.Tests
     {
         private FilmsRatingDBContext dbContext;
         private UtilisateursController utilisateursController;
+        private IDataRepository<Utilisateur> dataRepository;
 
         [TestInitialize]
         public void Init()
         {
-            dbContext = new FilmsRatingDBContext();
-            utilisateursController = new UtilisateursController(dbContext);
+            //dbContext = new FilmsRatingDBContext();
+            var builder = new DbContextOptionsBuilder<FilmsRatingDBContext>().UseNpgsql("FilmRatingsDBContext");
+            dbContext = new FilmsRatingDBContext(builder.Options);
+            dataRepository = new UtilisateurManager(dbContext);
+            //utilisateursController = new UtilisateursController(dbContext);
+            utilisateursController = new UtilisateursController(dataRepository);
         }
 
         [TestMethod()]
         public void UtilisateursControllerTest()
         {
-            var utilisateurController = new UtilisateursController(dbContext);
+            var utilisateurController = new UtilisateursController(dataRepository);
             Assert.IsNotNull(utilisateurController);
             Assert.IsInstanceOfType(utilisateurController, typeof(UtilisateursController));
         }
