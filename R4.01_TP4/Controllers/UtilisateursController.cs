@@ -37,7 +37,7 @@ namespace R4._01_TP4.Controllers
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
-            var utilisateur = dataRepository.GetById(id);
+            var utilisateur = dataRepository.GetByIdAsync(id);
 
             if (utilisateur.Result == null)
             {
@@ -58,7 +58,7 @@ namespace R4._01_TP4.Controllers
             }
 
             //_context.Entry(utilisateur).State = EntityState.Modified;
-            var userToUpdate = dataRepository.GetById(id);
+            var userToUpdate = dataRepository.GetByIdAsync(id);
 
             //try
             //{
@@ -84,7 +84,7 @@ namespace R4._01_TP4.Controllers
             }
             else
             {
-                dataRepository.UpdateAsync(userToUpdate.Value, utilisateur);
+                dataRepository.UpdateAsync(userToUpdate.Result.Value, utilisateur);
                 return NoContent();
             }
         }
@@ -111,7 +111,7 @@ namespace R4._01_TP4.Controllers
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
-            var utilisateur = dataRepository.GetById(id);
+            var utilisateur = dataRepository.GetByIdAsync(id);
             if (utilisateur == null)
             {
                 return NotFound();
@@ -119,7 +119,7 @@ namespace R4._01_TP4.Controllers
 
             //_context.Utilisateurs.Remove(utilisateur);
             //await _context.SaveChangesAsync();
-            await dataRepository.DeleteAsync(utilisateur.Value);
+            await dataRepository.DeleteAsync(utilisateur.Result.Value);
 
             return NoContent();
         }
